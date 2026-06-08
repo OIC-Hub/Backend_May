@@ -1,45 +1,51 @@
 const express = require("express");
 const dotenv = require("dotenv");
-
+const morgan = require("morgan");
+const UserRoute = require("./routes/user.route")
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT
 
-app.get("/home", (req, res) => {
-    res.send("hello world")
-})
+app.use(express.json());
+app.use(morgan("combined"));
 
-const users = [
-  { id: 1, name: 'AdaLovelace',  role: 'Engineer' },
-  { id: 2, name: 'AlanTuring',   role: 'Mathematician' },
-  { id: 3, name: 'Grace Hopper',  role: 'Admiral' },
-];
+app.use("/api", UserRoute);
 
-app.get("/users/:id", (req, res) => {
-    const id = Number(req.params.id);
-    const findUser = users.find(e => e.id === id);
+// app.get("/home", (req, res) => {
+//     res.send("hello world")
+// })
 
-    if(!findUser){
-        res.send("User NOT found")
-        return;
-    }
+// const users = [
+//   { id: 1, name: 'AdaLovelace',  role: 'Engineer' },
+//   { id: 2, name: 'AlanTuring',   role: 'Mathematician' },
+//   { id: 3, name: 'Grace Hopper',  role: 'Admiral' },
+// ];
 
-    res.send(findUser);
-})
+// app.get("/users/:id", (req, res) => {
+//     const id = Number(req.params.id);
+//     const findUser = users.find(e => e.id === id);
 
-app.get("/users", (req, res) => {
-    const UserQuery = req.query.name
-    const FindByName = users.find(e => e.name === UserQuery);
+//     if(!findUser){
+//         res.send("User NOT found")
+//         return;
+//     }
 
-    if(!FindByName){
-        res.send("User not found")
-    }
+//     res.send(findUser);
+// })
 
-    res.send(FindByName)
+// app.get("/users", (req, res) => {
+//     const UserQuery = req.query.name
+//     const FindByName = users.find(e => e.name === UserQuery);
+
+//     if(!FindByName){
+//         res.send("User not found")
+//     }
+
+//     res.send(FindByName)
    
 
-})
+// })
 
 app.listen(PORT, () => {
     console.log(`Server running at ${PORT}`)
