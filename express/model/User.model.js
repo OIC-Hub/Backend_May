@@ -1,5 +1,22 @@
-const users = [
-  { id: 1, name: 'AdaLovelace',  role: 'Engineer' },
-  { id: 2, name: 'AlanTuring',   role: 'Mathematician' },
-  { id: 3, name: 'Grace Hopper',  role: 'Admiral' },
-];
+const mongoose = require("mongoose");
+
+const UserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    require: true
+  },
+
+  email: {
+    type: String,
+    unique: true,
+    require: true
+  },
+
+  password: {
+    type: String,
+    require: true
+  }
+
+});
+
+module.exports = mongoose.model('User', UserSchema);
