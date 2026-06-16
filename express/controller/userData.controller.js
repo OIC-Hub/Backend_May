@@ -16,9 +16,9 @@
 // }
 
 const User = require("../model/User.model")
+const bcrypt = require("bcryptjs") 
 
-
-function AddUser(req, res) {
+async function AddUser(req, res) {
     const {name, email, password, date} = req.body
 
     if(name === "" || email === "" || password === ""){
@@ -28,13 +28,29 @@ function AddUser(req, res) {
     const newUser = new User ({
         name,
         email,
-        password,
-        date: date.now()
+        password: await bcrypt.hash(password, 10),
+        date: date
     })
 
     newUser.save()
     res.status(200).send("User registered Successfully");
 }
+
+async function login(req, res){
+    try {
+        const{email, password} = req.body
+        const user = await User.findOne({email: email});
+        const comparePassword = await bcrypt.compare(password, user.password )
+
+        if (!user || !comparePassword){
+            res.status(404).send("Invalid credential")
+        }
+
+        res.status(200).send("login successfully")
+    } catch (error) {
+        console.error(error)
+    }
+} 
 
 async function Allusers(req, res){
     try {
@@ -96,4 +112,4 @@ async function deleteUser(req, res){
 }
 
 
-module.exports = {AddUser, Allusers, getUserbyID, updateUser, deleteUser};
+module.exports = {AddUser, Allusers, getUserbyID, updateUser, deleteUser, login};
