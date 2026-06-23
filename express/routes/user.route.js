@@ -1,9 +1,10 @@
 const express = require("express");
 const {AddUser, Allusers, getUserbyID, updateUser, deleteUser, login} = require("../controller/userData.controller")
 const AuthGateKeeper = require("../middleware/auth")
+const roleMiddleware = require("../middleware/role")
 const route = express.Router();
 
-route.get("/getuser", Allusers );
+route.get("/getuser", AuthGateKeeper, roleMiddleware(["admin"]), Allusers );
 route.post('/adduser', AddUser )
 route.get("/user/:id", AuthGateKeeper, getUserbyID)
 route.put("/user/:id", updateUser)

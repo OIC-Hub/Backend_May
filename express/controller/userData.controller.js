@@ -28,7 +28,7 @@ function generateToken(userId) {
 }
 
 async function AddUser(req, res) {
-    const { name, email, password, date } = req.body
+    const { name, email, password, role, date } = req.body
 
     if (name === "" || email === "" || password === "") {
         res.status(400).send("Invalid Credentials");
@@ -38,6 +38,7 @@ async function AddUser(req, res) {
         name,
         email,
         password: await bcrypt.hash(password, 10),
+        role,
         date: date
     })
 
